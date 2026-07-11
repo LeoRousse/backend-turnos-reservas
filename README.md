@@ -6,7 +6,7 @@ Construir una API REST con Express que exponga endpoints para gestionar el recur
 
 ## Descripción
 
-Esta aplicación ofrece una API para crear, leer, actualizar y eliminar servicios. El almacenamiento se realiza en un archivo JSON (`src/data/services.json`) y la lógica de negocio está centralizada en `src/managers/ServiceManager.js`.
+Esta aplicación ofrece una API para crear, leer, actualizar y eliminar servicios. El almacenamiento se realiza en el archivo JSON real del repositorio en `src/data/services.json` y la lógica de negocio está centralizada en `src/managers/ServiceManager.js`.
 
 ## Tecnologías
 
@@ -56,6 +56,12 @@ Base: `/api/services`
   - `category`: filtra por categoría.
   - `available`: filtra por disponibilidad (`true` o `false`).
 
+Ejemplo:
+
+```bash
+curl "http://localhost:8080/api/services?category=peluqueria&available=true"
+```
+
 ### Obtener un servicio por id
 
 - Método: `GET`
@@ -76,6 +82,14 @@ Base: `/api/services`
   "category": "peluqueria",
   "available": true
 }
+```
+
+Ejemplo:
+
+```bash
+curl -X POST http://localhost:8080/api/services \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Corte de pelo","description":"Corte de cabello completo","duration":45,"price":2500,"category":"peluqueria","available":true}'
 ```
 
 ### Actualizar un servicio
@@ -99,6 +113,12 @@ Base: `/api/services`
 
 - Método: `DELETE`
 - Ruta: `/api/services/:sid`
+
+## Códigos de respuesta
+
+- `201` en `POST` cuando se crea un servicio.
+- `404` si no existe el `sid` en `GET`, `PUT` o `DELETE`.
+- `400` cuando falta el body o hay datos inválidos.
 
 ## Validaciones principales
 
