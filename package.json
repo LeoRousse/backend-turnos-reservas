@@ -1,7 +1,7 @@
 {
  "name": "backend-turnos-reservas",
  "version": "1.0.0",
- "description": "Sistema backend de turnos y reservas con Node.js, Express y MongoDB",
+ "description": "Sistema backend de turnos y reservas con Node.js y Express",
  "type": "module",
  "main": "src/server.js",
  "scripts": {

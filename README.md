@@ -1,118 +1,116 @@
-# Backend Turnos y Reservas
+# Backend de Turnos y Reservas
 
-Proyecto Node.js con sintaxis ESM para un sistema de gestión de turnos y reservas. Incluye un gestor de servicios (`ServiceManager`) que maneja los datos en memoria y valida los campos requeridos.
+## Objetivo
 
-## Estructura del proyecto
+Construir una API REST con Express que exponga endpoints para gestionar el recurso `services`, conectando las rutas con el `ServiceManager` de la entrega anterior.
 
-- `src/`
-  - `config/env.config.js` — carga y valida variables de entorno
-  - `managers/ServiceManager.js` — lógica de servicios con métodos CRUD
-  - `data/services.json` — almacenamiento local de ejemplo
-  - `app.js` — punto de entrada de la aplicación
-- `package.json`
-- `.env.example`
-- `.gitignore`
-- `README.md`
+## Descripción
+
+Esta aplicación ofrece una API para crear, leer, actualizar y eliminar servicios. El almacenamiento se realiza en un archivo JSON (`src/data/services.json`) y la lógica de negocio está centralizada en `src/managers/ServiceManager.js`.
+
+## Tecnologías
+
+- Node.js
+- Express
+- dotenv
+- Módulos ES (`type: module`)
 
 ## Instalación
 
-1. Instalar dependencias:
+1. Clona el repositorio o descarga el proyecto.
+2. Ejecuta:
 
 ```bash
 npm install
 ```
 
-2. Crear `.env` basado en `.env.example`:
-
-```bash
-cp .env.example .env
-```
-
-3. Completar `.env` con los valores necesarios.
-
-## Ejecución
-
-```bash
-npm start
-```
-
-## Variables de entorno necesarias
-
-En `.env` deben estar definidas las siguientes variables:
+3. Crea un archivo `.env` en la raíz con estas variables:
 
 ```env
 PORT=8080
 NODE_ENV=development
 ```
 
-En `.env.example` sólo se mantienen las claves sin valores:
+4. Inicia el servidor:
 
-```env
-PORT=
-NODE_ENV=
+```bash
+npm start
 ```
 
-> No subir el archivo `.env` al repositorio.
+## Estructura relevante
 
-## Recurso `services`
+- `src/server.js`: arranca el servidor Express.
+- `src/app.js`: configura Express y monta las rutas.
+- `src/routes/services.router.js`: define los endpoints de `services`.
+- `src/managers/ServiceManager.js`: gestiona la lógica de servicios y persiste en `src/data/services.json`.
 
-El gestor de servicios usa la clase `ServiceManager` en `src/managers/ServiceManager.js`. Cada servicio tiene esta forma:
+## Endpoints de `services`
 
-```js
+Base: `/api/services`
+
+### Obtener todos los servicios
+
+- Método: `GET`
+- Ruta: `/api/services`
+- Query opcionales:
+  - `category`: filtra por categoría.
+  - `available`: filtra por disponibilidad (`true` o `false`).
+
+### Obtener un servicio por id
+
+- Método: `GET`
+- Ruta: `/api/services/:sid`
+
+### Crear un servicio
+
+- Método: `POST`
+- Ruta: `/api/services`
+- Body JSON obligatorio:
+
+```json
 {
-  id,
-  name,
-  description,
-  duration,
-  price,
-  category,
-  available
+  "name": "Corte de pelo",
+  "description": "Corte de cabello completo",
+  "duration": 45,
+  "price": 2500,
+  "category": "peluqueria",
+  "available": true
 }
 ```
 
-### Métodos disponibles
+### Actualizar un servicio
 
-- `getServices()` — devuelve todos los servicios.
-- `getServiceById(id)` — devuelve el servicio por `id` o `null` si no existe.
-- `addService(serviceData)` — agrega un servicio validado; el `id` se genera automáticamente.
-- `updateService(id, updatedData)` — actualiza un servicio existente; no permite modificar el `id`.
-- `deleteService(id)` — elimina un servicio; devuelve el servicio eliminado o `null` si no existe.
+- Método: `PUT`
+- Ruta: `/api/services/:sid`
+- Body JSON con los campos a actualizar:
 
-### Ejemplos de uso
-
-```js
-import { ServiceManager } from './src/managers/ServiceManager.js';
-
-const manager = new ServiceManager();
-
-const nuevoServicio = manager.addService({
-  name: 'Consulta general',
-  description: 'Atención médica general',
-  duration: 45,
-  price: 3000,
-  category: 'salud',
-  available: true,
-});
-
-console.log('Servicio agregado:', nuevoServicio);
-
-const todos = manager.getServices();
-console.log('Todos los servicios:', todos);
-
-const servicio = manager.getServiceById(nuevoServicio.id);
-console.log('Servicio por id:', servicio);
-
-const actualizado = manager.updateService(nuevoServicio.id, {
-  price: 3500,
-  available: false,
-});
-console.log('Servicio actualizado:', actualizado);
-
-const eliminado = manager.deleteService(nuevoServicio.id);
-console.log('Servicio eliminado:', eliminado);
+```json
+{
+  "name": "Corte de pelo premium",
+  "description": "Corte de cabello completo con styling",
+  "duration": 60,
+  "price": 3200,
+  "category": "peluqueria",
+  "available": true
+}
 ```
+
+### Eliminar un servicio
+
+- Método: `DELETE`
+- Ruta: `/api/services/:sid`
+
+## Validaciones principales
+
+- `name`: cadena no vacía.
+- `description`: cadena no vacía.
+- `duration`: número positivo.
+- `price`: número mayor o igual a cero.
+- `category`: cadena.
+- `available`: booleano.
 
 ## Notas
 
-- `src/config/env.config.js` valida al iniciar que `PORT` y `NODE_ENV` existan.
-- Si falta alguna variable requerida, la aplicación falla con un mensaje claro.
+- El `id` de los servicios se genera internamente y no debe enviarse en la solicitud `POST`.
+- Los servicios se almacenan en `src/data/services.json`.
+- El servidor usa el puerto configurado en `.env`.

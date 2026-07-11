@@ -15,8 +15,13 @@ if (missing.length > 0) {
   throw new Error(`Variables de entorno faltantes: ${missing.join(', ')}. Define estas variables en tu .env o en el entorno de ejecución.`);
 }
 
+const port = Number(process.env.PORT);
+if (!Number.isInteger(port) || port <= 0) {
+  throw new Error('PORT debe ser un número entero mayor que cero. Revisa tu archivo .env.');
+}
+
 export const env = {
-  port: Number(process.env.PORT),
+  port,
   nodeEnv: process.env.NODE_ENV,
 };
 

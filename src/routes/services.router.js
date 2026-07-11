@@ -18,15 +18,19 @@ export function createServicesRouter(serviceManager) {
       services = services.filter((service) => service.available === availableBool);
     }
 
-    return res.json(services);
+    return res.status(200).json(services);
   });
 
   router.get('/:sid', (req, res) => {
-    const service = serviceManager.getServiceById(req.params.sid);
-    if (!service) {
-      return res.status(404).json({ error: 'Servicio no encontrado' });
+    try {
+      const service = serviceManager.getServiceById(req.params.sid);
+      if (!service) {
+        return res.status(404).json({ error: 'Servicio no encontrado' });
+      }
+      return res.status(200).json(service);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
     }
-    return res.json(service);
   });
 
   router.post('/', async (req, res) => {
@@ -44,7 +48,7 @@ export function createServicesRouter(serviceManager) {
       if (!updatedService) {
         return res.status(404).json({ error: 'Servicio no encontrado' });
       }
-      return res.json(updatedService);
+      return res.status(200).json(updatedService);
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
@@ -56,7 +60,7 @@ export function createServicesRouter(serviceManager) {
       if (!deletedService) {
         return res.status(404).json({ error: 'Servicio no encontrado' });
       }
-      return res.json(deletedService);
+      return res.status(200).json(deletedService);
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
