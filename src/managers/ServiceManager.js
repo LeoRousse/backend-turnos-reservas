@@ -88,6 +88,10 @@ export class ServiceManager {
   }
 
   async addService(serviceData) {
+    if (serviceData.id !== undefined) {
+      throw new Error('No se permite enviar el id en el body de POST. El id se genera internamente.');
+    }
+
     this._validateServicePayload(serviceData);
 
     if ([...this.services.values()].some((service) => service.name === serviceData.name)) {
