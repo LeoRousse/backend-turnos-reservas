@@ -34,25 +34,35 @@ export function createServicesRouter(serviceManager) {
   });
 
   router.post('/', async (req, res) => {
-    try {
-      const service = await serviceManager.addService(req.body);
-      return res.status(201).json(service);
-    } catch (error) {
-      return res.status(400).json({ error: error.message });
+  try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ error: 'Body requerido' });
     }
+
+    const service = await serviceManager.addService(req.body);
+    return res.status(201).json(service);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
   });
 
+
   router.put('/:sid', async (req, res) => {
-    try {
-      const updatedService = await serviceManager.updateService(req.params.sid, req.body);
-      if (!updatedService) {
-        return res.status(404).json({ error: 'Servicio no encontrado' });
-      }
-      return res.status(200).json(updatedService);
-    } catch (error) {
-      return res.status(400).json({ error: error.message });
+  try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ error: 'Body requerido' });
     }
+
+    const updatedService = await serviceManager.updateService(req.params.sid, req.body);
+    if (!updatedService) {
+      return res.status(404).json({ error: 'Servicio no encontrado' });
+    }
+    return res.status(200).json(updatedService);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
   });
+
 
   router.delete('/:sid', async (req, res) => {
     try {

@@ -1,4 +1,4 @@
-// src/managers/ServiceManager.js
+// src/services/ServiceManager.js
 import { randomUUID } from "crypto";
 import fs from "fs/promises";
 import path from "path";

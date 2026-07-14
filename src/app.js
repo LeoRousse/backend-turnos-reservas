@@ -1,5 +1,5 @@
 import express from 'express';
-import { ServiceManager } from './managers/ServiceManager.js';
+import { ServiceManager } from './services/ServiceManager.js';
 import { createServicesRouter } from './routes/services.router.js';
 
 export const serviceManager = await ServiceManager.create();
